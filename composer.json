@@ -1,0 +1,26 @@
+{
+    "name": "welcome2ba/bitpagos-api-sdk-php",
+    "description": "BitPagos's PHP SDK for REST APIs",
+    "keywords": ["bitpagos", "payments", "rest", "sdk", "php", "checkout"],
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matias Perrone",
+            "homepage": "https://github.com/matiasperrone/bitpagos-rest-api-sdk-php/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0",
+        "ext-curl": "*",
+        "ext-json": "*"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "BitPagos": "lib/"
+        }
+    }
+}
