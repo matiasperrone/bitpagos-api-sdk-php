@@ -159,7 +159,7 @@ class Checkout extends BitPagosResourceModel
 	public function create(\BitPagos\Rest\ApiContext $apiContext, $restCall = null)
 	{
 		$payLoad = $this->toJSON();
-		$json = self::executeCall( "/api/v1/checkout/?format=json", "POST", $payLoad, null, $apiContext, $restCall );
+		$json = self::executeCall( "/api/v1/checkout/?format=json", "POST", $payLoad, $apiContext, null, $restCall );
 		$this->fromJson( $json );
 		return $this;
 	}
