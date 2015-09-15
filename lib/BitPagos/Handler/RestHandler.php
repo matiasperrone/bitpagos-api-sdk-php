@@ -131,7 +131,8 @@ class RestHandler implements IBitPagosHandler
 					break;
 			}
 		}
-		elseelse {
+		else
+		{
 			// Defaulting to Sandbox
 			return BitPagosConstants::REST_SANDBOX_ENDPOINT;
 		}
