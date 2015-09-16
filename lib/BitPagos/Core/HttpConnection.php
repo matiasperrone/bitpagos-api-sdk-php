@@ -115,11 +115,7 @@ class HttpConnection
 
 		//Execute Curl Request
 		$result = curl_exec( $ch );
-		echo '<pre>';
-		echonl( curl_getinfo( $ch, CURLINFO_HEADER_OUT ) );
-		echonl( str_repeat( '=', 100 ) );
-		echonl( $result );
-		echo '</pre>';
+
 		//Retrieve Response Status
 		$httpStatus = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 
