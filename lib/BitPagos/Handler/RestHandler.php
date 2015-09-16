@@ -87,13 +87,9 @@ class RestHandler implements IBitPagosHandler
 		
 		if ($credential === false and ! empty( $this->apiContext->getApiKey() ) and is_null( $httpConfig->getHeader( 'Authorization' ) ))
 		{
-			$httpConfig->addHeader( 'Authorization', "ApiKey " . $credential->getApiKey(), false );
+			$httpConfig->addHeader( 'Authorization', "ApiKey " . $this->apiContext->getApiKey(), false );
 		}
 		
-		if ($httpConfig->getMethod() == 'POST' || $httpConfig->getMethod() == 'PUT')
-		{
-			$httpConfig->addHeader( 'BitPagos-Request-Id', $this->apiContext->getRequestId() );
-		}
 		// Add any additional Headers that they may have provided
 		$headers = $this->apiContext->getRequestHeaders();
 		foreach ( $headers as $key => $value )

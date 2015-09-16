@@ -242,7 +242,8 @@ class BitPagosModel
 				if (is_array( $v ))
 				{
 					// Determine the class of the object
-					if (( $clazz = ReflectionUtil::getPropertyClass( get_class( $this ), $k ) ) != null)
+					$clazz = ReflectionUtil::getPropertyClass( get_class( $this ), $k );
+					if (! is_null( $clazz ))
 					{
 						// If the value is an associative array, it means, its an object. Just make recursive call to it.
 						if (empty( $v ))

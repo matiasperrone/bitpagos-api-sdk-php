@@ -1,27 +1,30 @@
 <?php
 
-namespace PayPal\Common;
+namespace BitPagos\Common;
 
 /**
  * Class ArrayUtil
  * Util Class for Arrays
  *
- * @package PayPal\Common
+ * @package BitPagos\Common
  */
 class ArrayUtil
 {
-    /**
-     *
-     * @param array $arr
-     * @return true if $arr is an associative array
-     */
-    public static function isAssocArray(array $arr)
-    {
-        foreach ($arr as $k => $v) {
-            if (is_int($k)) {
-                return false;
-            }
-        }
-        return true;
-    }
+
+	/**
+	 *
+	 * @param array $arr        	
+	 * @return true if $arr is an associative array
+	 */
+	public static function isAssocArray(array $arr)
+	{
+		foreach ( $arr as $k => $v )
+		{
+			if (is_int( $k ))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
 }

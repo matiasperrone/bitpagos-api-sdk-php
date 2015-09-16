@@ -11,15 +11,10 @@ use BitPagos\Core\BitPagosConstants;
  * Lets you create, process and manage checkout payments.
  *
  * @package BitPagos\Api
- *         
+ *
  * @property string client_id
  * @property string secret
  * @property string key
- * @property \BitPagos\Api\itemList itemList
- * @property \BitPagos\Api\Ipn ipn
- * @property \BitPagos\Api\Amount amount
- * @property \BitPagos\Api\RedirectUrls redirect_urls
- * @property string reference_id
  */
 class Checkout extends BitPagosResourceModel
 {
@@ -32,44 +27,50 @@ class Checkout extends BitPagosResourceModel
 	 */
 	public function __construct()
 	{
+		$ipnformat = 'ipn-format';
+		$this->$ipnformat = 'json';
+		$this->ipn = '';
 	}
 
 	/**
 	 * Establece la lista de items
 	 *
-	 * @param \BitPagos\Api\ItemList $itemList        	
-	 * @return string
+	 * @param \BitPagos\Api\ItemList $itemList
+	 * @return $this
 	 */
-	public function setItemList(\BitPagos\Api\ItemList $itemList)
+	public function addItem(\BitPagos\Api\Item $item)
 	{
-		$this->itemList = $itemList;
+		if (! isset( $this->items ))
+			$this->items = [$item];
+		else
+			$this->items[] = $item;
 		return $this;
 	}
 
 	/**
 	 * Devuelve la lista de items
 	 *
-	 * @return string
+	 * @return array
 	 */
-	public function getItemList()
-	{
-		return $this->itemList;
-	}
+// 	public function getItems()
+// 	{
+// 		return $this->items;
+// 	}
 
 	/**
-	 * Establece el destino y formato de la llamda del IPN
+	 * Establece el destino de la llamda del IPN
 	 *
-	 * @param \BitPagos\Api\Ipn $ipn        	
-	 * @return string
+	 * @param string $ipn
+	 * @return $this
 	 */
-	public function setIpn(\BitPagos\Api\Ipn $ipn)
+	public function setIpn($url)
 	{
-		$this->ipn = $ipn;
+		$this->ipn = $url;
 		return $this;
 	}
 
 	/**
-	 * Devuelve el objeto Ipn
+	 * Devuelve el destino de la llamada del IPN
 	 *
 	 * @return string
 	 */
@@ -81,7 +82,7 @@ class Checkout extends BitPagosResourceModel
 	/**
 	 * Amount being collected.
 	 *
-	 * @param \BitPagos\Api\Amount $amount        	
+	 * @param float $amount
 	 *
 	 * @return $this
 	 */
@@ -94,7 +95,7 @@ class Checkout extends BitPagosResourceModel
 	/**
 	 * Amount being collected.
 	 *
-	 * @return \BitPagos\Api\Amount
+	 * @return float
 	 */
 	public function getAmount()
 	{
@@ -102,32 +103,101 @@ class Checkout extends BitPagosResourceModel
 	}
 
 	/**
-	 * Redirect urls required
+	 * Currency of the amount being collected.
 	 *
-	 * @param \BitPagos\Api\RedirectUrls $redirect_urls        	
+	 * @param string $currency
 	 *
 	 * @return $this
 	 */
-	public function setRedirectUrls(\BitPagos\Api\RedirectUrls $redirect_urls)
+	public function setCurrency($currency)
 	{
-		$this->redirect_urls = $redirect_urls;
+		$this->currency = $currency;
 		return $this;
 	}
 
 	/**
-	 * Redirect urls required
+	 * Currency of the amount being collected.
 	 *
-	 * @return \BitPagos\Api\RedirectUrls
+	 * @return string
 	 */
-	public function getRedirectUrls()
+	public function getCurrency()
 	{
-		return $this->redirect_urls;
+		return $this->currency;
+	}
+
+	/**
+	 * Sets the success url redirect
+	 *
+	 * @param string $url
+	 *
+	 * @return $this
+	 */
+	public function setReturnSuccess($url)
+	{
+		$this->return_success = $url;
+		return $this;
+	}
+
+	/**
+	 * Gets the success url redirect
+	 *
+	 * @return string
+	 */
+	public function getReturnSuccess()
+	{
+		return $this->return_success;
+	}
+
+	/**
+	 * Sets the cancel url redirect
+	 *
+	 * @param string $url
+	 *
+	 * @return $this
+	 */
+	public function setReturnCancel($url)
+	{
+		$this->return_cancel = $url;
+		return $this;
+	}
+
+	/**
+	 * Gets the cancel url redirect
+	 *
+	 * @return string
+	 */
+	public function getReturnCancel()
+	{
+		return $this->return_cancel;
+	}
+
+	/**
+	 * Sets the pending url redirect
+	 *
+	 * @param string $url
+	 *
+	 * @return $this
+	 */
+	public function setReturnPending($url)
+	{
+		$this->return_pending = $url;
+		return $this;
+	}
+
+	/**
+	 * Gets the pending url redirect
+	 *
+	 * @return string
+	 */
+	public function getReturnPending()
+	{
+		return $this->return_pending;
 	}
 
 	/**
 	 * Set the caller reference_id
 	 *
-	 * @param string $reference_id        	
+	 * @param string $reference_id
 	 *
 	 * @return $this
 	 */
@@ -159,7 +229,7 @@ class Checkout extends BitPagosResourceModel
 	public function create(\BitPagos\Rest\ApiContext $apiContext, $restCall = null)
 	{
 		$payLoad = $this->toJSON();
-		$json = self::executeCall( "/api/v1/checkout/?format=json", "POST", $payLoad, $apiContext, null, $restCall );
+		$json = self::executeCall( "/api/v1/checkout/", "POST", $payLoad, $apiContext, null, $restCall );
 		$this->fromJson( $json );
 		return $this;
 	}

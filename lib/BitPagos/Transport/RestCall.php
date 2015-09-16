@@ -14,14 +14,14 @@ use BitPagos\Rest\ApiContext;
  */
 class RestCall
 {
-
+	
 	/**
 	 * BitPagos Logger
 	 *
 	 * @var LoggingManager logger interface
 	 */
 	private $logger;
-
+	
 	/**
 	 * API Context
 	 *
@@ -32,7 +32,7 @@ class RestCall
 	/**
 	 * Default Constructor
 	 *
-	 * @param ApiContext $apiContext
+	 * @param ApiContext $apiContext        	
 	 */
 	public function __construct(ApiContext $apiContext)
 	{
@@ -61,7 +61,7 @@ class RestCall
 		$httpConfig = new HttpConfig( null, $method, $config );
 		$headers = $headers ? $headers : array();
 		$httpConfig->setHeaders( $headers + array('Content-Type' => 'application/json') );
-
+		
 		/**
 		 *
 		 * @var \BitPagos\Handler\IBitPagosHandler $handler
@@ -77,7 +77,7 @@ class RestCall
 		}
 		$connection = new HttpConnection( $httpConfig, $config );
 		$response = $connection->execute( $data );
-
+		
 		return $response;
 	}
 }

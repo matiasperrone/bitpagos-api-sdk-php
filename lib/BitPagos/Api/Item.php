@@ -53,7 +53,7 @@ class Item extends BitPagosModel
 	 */
 	public function setTitle($name)
 	{
-		$this->title = $name;
+		$this->title = $name . '';
 		return $this;
 	}
 
@@ -76,9 +76,7 @@ class Item extends BitPagosModel
 	 */
 	public function setPrice($price)
 	{
-		NumericValidator::validate( $price, "Price" );
-		$price = FormatConverter::formatToPrice( $price, $this->getCurrency() );
-		$this->price = $price;
+		$this->unit_price = $price;
 		return $this;
 	}
 
@@ -89,29 +87,6 @@ class Item extends BitPagosModel
 	 */
 	public function getPrice()
 	{
-		return $this->price;
-	}
-
-	/**
-	 * 3-letter Currency Code
-	 *
-	 * @param string $currency        	
-	 *
-	 * @return $this
-	 */
-	public function setCurrency($currency)
-	{
-		$this->currency = $currency;
-		return $this;
-	}
-
-	/**
-	 * 3-letter Currency Code
-	 *
-	 * @return string
-	 */
-	public function getCurrency()
-	{
-		return $this->currency;
+		return $this->unit_price;
 	}
 }

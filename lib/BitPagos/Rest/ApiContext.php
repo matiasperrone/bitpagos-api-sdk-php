@@ -3,6 +3,7 @@
 namespace BitPagos\Rest;
 
 use BitPagos\Core\ConfigManager;
+use BitPagos\Core\CredentialManager;
 
 /**
  * Class ApiContext

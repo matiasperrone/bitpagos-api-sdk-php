@@ -169,8 +169,9 @@ class CredentialManager
 		
 		if (empty( $credObj ))
 		{
-			throw new BitPagosInvalidCredentialException( "Credential not found for " . ( $userId ? $userId : " default user" ) .
-														 ". Please make sure your configuration/APIContext has credential information" );
+			$credObj = null;
+	// 			throw new BitPagosInvalidCredentialException( "Credential not found for " . ( $userId ? $userId : " default user" ) .
+	// 														 ". Please make sure your configuration/APIContext has credential information" );
 		}
 		return $credObj;
 	}
