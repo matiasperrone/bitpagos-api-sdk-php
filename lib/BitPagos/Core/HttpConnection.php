@@ -12,6 +12,10 @@ use BitPagos\Exception\BitPagosConnectionException;
  */
 class HttpConnection
 {
+	public $httpStatus = 0;
+	public $requestHeaders = null;
+	public $responseHeaders = null;
+	public $responseBody = null;
 
 	/**
 	 *
@@ -117,7 +121,7 @@ class HttpConnection
 		$result = curl_exec( $ch );
 
 		//Retrieve Response Status
-		$httpStatus = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+		$this->httpStatus = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 
 		//Retry if Certificate Exception
 		if (curl_errno( $ch ) == 60)
@@ -126,21 +130,21 @@ class HttpConnection
 			curl_setopt( $ch, CURLOPT_CAINFO, dirname( __FILE__ ) . '/cacert.pem' );
 			$result = curl_exec( $ch );
 			//Retrieve Response Status
-			$httpStatus = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+			$this->httpStatus = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 		}
 
 		//Retry if Failing
 		$retries = 0;
-		if (in_array( $httpStatus, self::$retryCodes ) && $this->httpConfig->getHttpRetryCount() != null)
+		if (in_array( $this->httpStatus, self::$retryCodes ) && $this->httpConfig->getHttpRetryCount() != null)
 		{
-			$this->logger->info( "Got $httpStatus response from server. Retrying" );
+			$this->logger->info( "Got {$this->httpStatus} response from server. Retrying" );
 			do
 			{
 				$result = curl_exec( $ch );
 				//Retrieve Response Status
-				$httpStatus = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
+				$this->httpStatus = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 			}
-			while ( in_array( $httpStatus, self::$retryCodes ) && ( ++ $retries < $this->httpConfig->getHttpRetryCount() ) );
+			while ( in_array( $this->httpStatus, self::$retryCodes ) && ( ++ $retries < $this->httpConfig->getHttpRetryCount() ) );
 		}
 
 		//Throw Exception if Retries and Certificates doenst work
@@ -152,34 +156,34 @@ class HttpConnection
 		}
 
 		// Get Request and Response Headers
-		$requestHeaders = curl_getinfo( $ch, CURLINFO_HEADER_OUT );
+		$this->requestHeaders = curl_getinfo( $ch, CURLINFO_HEADER_OUT );
 		//Using alternative solution to CURLINFO_HEADER_SIZE as it throws invalid number when called using PROXY.
 		$responseHeaderSize = strlen( $result ) - curl_getinfo( $ch, CURLINFO_SIZE_DOWNLOAD );
-		$responseHeaders = substr( $result, 0, $responseHeaderSize );
+		$this->responseHeaders = substr( $result, 0, $responseHeaderSize );
 		$result = substr( $result, $responseHeaderSize );
 
-		$this->logger->debug( "Request Headers \t: " . str_replace( "\r\n", ", ", $requestHeaders ) );
+		$this->logger->debug( "Request Headers \t: " . str_replace( "\r\n", ", ", $this->requestHeaders ) );
 		$this->logger->debug( ( $data && $data != '' ? "Request Data\t\t: " . $data : "No Request Payload" ) . "\n" . str_repeat( '-', 128 ) . "\n" );
-		$this->logger->info( "Response Status \t: " . $httpStatus );
-		$this->logger->debug( "Response Headers\t: " . str_replace( "\r\n", ", ", $responseHeaders ) );
+		$this->logger->info( "Response Status \t: " . $this->httpStatus );
+		$this->logger->debug( "Response Headers\t: " . str_replace( "\r\n", ", ", $this->responseHeaders ) );
 
 		//Close the curl request
 		curl_close( $ch );
 
 		//More Exceptions based on HttpStatus Code
-		if (in_array( $httpStatus, self::$retryCodes ))
+		if (in_array( $this->httpStatus, self::$retryCodes ))
 		{
-			$ex = new BitPagosConnectionException( $this->httpConfig->getUrl(), "Got Http response code $httpStatus when accessing {$this->httpConfig->getUrl()}. " . "Retried $retries times." );
+			$ex = new BitPagosConnectionException( $this->httpConfig->getUrl(), "Got Http response code {$this->httpStatus} when accessing {$this->httpConfig->getUrl()}. " . "Retried $retries times." );
 			$ex->setData( $result );
-			$this->logger->error( "Got Http response code $httpStatus when accessing {$this->httpConfig->getUrl()}. " . "Retried $retries times." . $result );
+			$this->logger->error( "Got Http response code {$this->httpStatus} when accessing {$this->httpConfig->getUrl()}. " . "Retried $retries times." . $result );
 			$this->logger->debug( "\n\n" . str_repeat( '=', 128 ) . "\n" );
 			throw $ex;
 		}
-		else if ($httpStatus < 200 || $httpStatus >= 300)
+		else if ($this->httpStatus < 200 || $this->httpStatus >= 300)
 		{
-			$ex = new BitPagosConnectionException( $this->httpConfig->getUrl(), "Got Http response code $httpStatus when accessing {$this->httpConfig->getUrl()}.", $httpStatus );
+			$ex = new BitPagosConnectionException( $this->httpConfig->getUrl(), "Got Http response code {$this->httpStatus} when accessing {$this->httpConfig->getUrl()}.", $this->httpStatus );
 			$ex->setData( $result );
-			$this->logger->error( "Got Http response code $httpStatus when accessing {$this->httpConfig->getUrl()}. " . $result );
+			$this->logger->error( "Got Http response code {$this->httpStatus} when accessing {$this->httpConfig->getUrl()}. " . $result );
 			$this->logger->debug( "\n\n" . str_repeat( '=', 128 ) . "\n" );
 			throw $ex;
 		}
@@ -187,6 +191,7 @@ class HttpConnection
 		$this->logger->debug( ( $result && $result != '' ? "Response Data \t: " . $result : "No Response Body" ) . "\n\n" . str_repeat( '=', 128 ) . "\n" );
 
 		//Return result object
+		$this->responseBody = &$result;
 		return $result;
 	}
 }

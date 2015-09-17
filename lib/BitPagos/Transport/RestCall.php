@@ -28,6 +28,14 @@ class RestCall
 	 * @var ApiContext
 	 */
 	private $apiContext;
+	
+	/**
+	 * HTTP Connection
+	 * Is not available until the execute method is called
+	 *
+	 * @var httpConnection
+	 */
+	public $httpConnection;
 
 	/**
 	 * Default Constructor
@@ -75,8 +83,8 @@ class RestCall
 			}
 			$handler->handle( $httpConfig, $data, array('path' => $path, 'apiContext' => $this->apiContext) );
 		}
-		$connection = new HttpConnection( $httpConfig, $config );
-		$response = $connection->execute( $data );
+		$this->httpConnection = new HttpConnection( $httpConfig, $config );
+		$response = $this->httpConnection->execute( $data );
 		
 		return $response;
 	}

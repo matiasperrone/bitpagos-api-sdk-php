@@ -99,7 +99,7 @@ class BitPagosResourceModel extends BitPagosModel implements IResource
 										$payLoad, 
 										BitPagos\Rest\ApiContext $apiContext, 
 										$headers = array(), 
-										BitPagos\Transport\RestCall $restCall = null, 
+										BitPagos\Transport\RestCall &$restCall = null, 
 										$handlers = array('BitPagos\Handler\RestHandler'))
 	{
 		if (empty( $apiContext ))
@@ -108,9 +108,10 @@ class BitPagosResourceModel extends BitPagosModel implements IResource
 		}
 		
 		//Initialize the context and rest call object if not provided explicitly
-		$restCall = $restCall ? $restCall : new RestCall( $apiContext );
-		
-		//Make the execution call
+		if (! $restCall)
+			$restCall = new RestCall( $apiContext );
+			
+			//Make the execution call
 		$json = $restCall->execute( $handlers, $url, $method, $payLoad, $headers );
 		return $json;
 	}
