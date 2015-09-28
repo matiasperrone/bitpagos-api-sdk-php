@@ -20,7 +20,7 @@ class BitPagosResourceModel extends BitPagosModel implements IResource
 	/**
 	 * Sets Links
 	 *
-	 * @param \BitPagos\Api\Links[] $links        	
+	 * @param \BitPagos\Api\Links[] $links
 	 *
 	 * @return $this
 	 */
@@ -55,7 +55,7 @@ class BitPagosResourceModel extends BitPagosModel implements IResource
 	/**
 	 * Append Links to the list.
 	 *
-	 * @param \BitPagos\Api\Links $links        	
+	 * @param \BitPagos\Api\Links $links
 	 * @return $this
 	 */
 	public function addLink($links)
@@ -73,7 +73,7 @@ class BitPagosResourceModel extends BitPagosModel implements IResource
 	/**
 	 * Remove Links from the list.
 	 *
-	 * @param \BitPagos\Api\Links $links        	
+	 * @param \BitPagos\Api\Links $links
 	 * @return $this
 	 */
 	public function removeLink($links)
@@ -84,33 +84,33 @@ class BitPagosResourceModel extends BitPagosModel implements IResource
 	/**
 	 * Execute SDK Call to BitPagos services
 	 *
-	 * @param string $url        	
-	 * @param string $method        	
-	 * @param string $payLoad        	
-	 * @param array $headers        	
-	 * @param BitPagos\Rest\ApiContext $apiContext        	
-	 * @param BitPagos\Transport\RestCall $restCall        	
-	 * @param array $handlers        	
+	 * @param string $url
+	 * @param string $method
+	 * @param string $payLoad
+	 * @param array $headers
+	 * @param BitPagos\Rest\ApiContext $apiContext
+	 * @param BitPagos\Transport\RestCall $restCall
+	 * @param array $handlers
 	 * @return string json response of the object
 	 */
 	protected static function executeCall(
-										$url, 
-										$method, 
-										$payLoad, 
-										BitPagos\Rest\ApiContext $apiContext, 
-										$headers = array(), 
-										BitPagos\Transport\RestCall &$restCall = null, 
+										$url,
+										$method,
+										$payLoad,
+										\BitPagos\Rest\ApiContext $apiContext,
+										$headers = array(),
+										\BitPagos\Transport\RestCall &$restCall = null,
 										$handlers = array('BitPagos\Handler\RestHandler'))
 	{
 		if (empty( $apiContext ))
 		{
 			throw new \InvalidArgumentException( 'The context can not be empty' );
 		}
-		
+
 		//Initialize the context and rest call object if not provided explicitly
 		if (! $restCall)
 			$restCall = new RestCall( $apiContext );
-			
+
 			//Make the execution call
 		$json = $restCall->execute( $handlers, $url, $method, $payLoad, $headers );
 		return $json;

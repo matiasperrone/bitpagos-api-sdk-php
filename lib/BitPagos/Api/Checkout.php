@@ -215,7 +215,7 @@ class Checkout extends BitPagosResourceModel
 	 *        	is the Rest Call Service that is used to make rest calls
 	 * @return \BitPagos\Rest\Checkout
 	 */
-	public function &create(\BitPagos\Rest\ApiContext $apiContext, BitPagos\Transport\RestCall &$restCall = null)
+	public function &create(\BitPagos\Rest\ApiContext $apiContext, \BitPagos\Transport\RestCall &$restCall = null)
 	{
 		$payLoad = $this->toJSON();
 		$json = self::executeCall( "/api/v1/checkout/", "POST", $payLoad, $apiContext, null, $restCall );
