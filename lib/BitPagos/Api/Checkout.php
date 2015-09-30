@@ -235,7 +235,7 @@ class Checkout extends BitPagosResourceModel
 	public function &status($transaction_id, \BitPagos\Rest\ApiContext $apiContext, \BitPagos\Transport\RestCall &$restCall = null)
 	{
 		$payLoad = $this->toJSON();
-		$json = self::executeCall( "/api/v1/transaction/{$transaction_id}?format=json", "GET", $payLoad, null, $apiContext, $restCall );
+		$json = self::executeCall( "/api/v1/transaction/{$transaction_id}?format=json", "GET", $payLoad, $apiContext, null, $restCall );
 		$this->fromJson( $json );
 		return $this;
 	}
